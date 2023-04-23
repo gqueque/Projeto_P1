@@ -25,7 +25,7 @@ chatgpt = pygame.transform.scale(chatgpt, (70, 70))
 pos_chatpgt_x = 500
 pos_chatpgt_y = 300
 
-
+#teste
 
 
 rodando = True
