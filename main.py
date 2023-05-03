@@ -219,3 +219,51 @@ while rodando:
 
 if game_over == True:
     print("Game Over")
+
+'''
+comentários:
+
+1. tamanho da tela
+posso diminuir um pouco o tamanho da tela?
+para não pegar a tela toda. facilita pra fechar.
+pensei em (x)960x540(y).
+
+2. quit
+outra coisa é que eu não consegui fechar.
+acho que na linha 92 em vez de pygame.QUIT, a sintaxe correta é
+if event.type == QUIT:
+	pygame.quit()
+	exit()
+
+3. criando Pause (tecla P)
+
+(na linha 116)
+if tecla [pygame.K_p]:
+	if rodando:
+		rodando = False
+	else:
+		rodando = True
+	mensagem = "JOGO PAUSADO"
+	texto = fonte.render(mensagem,True,(255,255,255))
+	caixa_texto = texto.get_rect()
+	pausado = True
+	while pausado:
+		caixa_texto.center = (x//2, y//2)
+		screen.blit (texto, caixa_texto)
+		if event.type == QUIT:
+			pygame.quit()
+			exit()
+		if tecla [pygame.K_p]:
+			rodando = True
+		
+            pygame.display.update()
+				
+(...não sei se é necessário, mas...)
+(antes da linha 207)
+	if rodando == False:
+		pygame.display.flip()
+		continue
+
+4. converter para POO:
+	classe dos objetos inimigos
+'''
