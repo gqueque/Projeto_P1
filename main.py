@@ -270,3 +270,4 @@ if tecla [pygame.K_p]:
 	if rodando == False:
 		pygame.display.flip()
 		continue
+'''
