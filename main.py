@@ -223,19 +223,26 @@ if game_over == True:
 '''
 comentários:
 
-1. tamanho da tela
-posso diminuir um pouco o tamanho da tela?
-para não pegar a tela toda. facilita pra fechar.
-pensei em (x)960x540(y).
+1. POO
+	class Inimigos:
+    
+    def erro (self):
+        erro = pygame.image.load("fotos/erro.png").convert_alpha()
+        erro = monitor = pygame.transform.scale(monitor, (80, 80))
+        pos_monitor_x = 100
+        pos_monitor_y = 300
 
-2. quit
-outra coisa é que eu não consegui fechar.
-acho que na linha 92 em vez de pygame.QUIT, a sintaxe correta é
-if event.type == QUIT:
-	pygame.quit()
-	exit()
+    def runtime (self):
+        
 
-3. criando Pause (tecla P)
+    def chatgpt (self):
+        chatgpt = pygame.image.load("fotos/gpt.png").convert_alpha()
+        chatgpt = pygame.transform.scale(chatgpt, (70, 70))
+        pos_chatgpt_x = 500
+        pos_chatgpt_y = 300
+
+
+2. criando Pause (tecla P)
 
 (na linha 116)
 if tecla [pygame.K_p]:
@@ -263,7 +270,3 @@ if tecla [pygame.K_p]:
 	if rodando == False:
 		pygame.display.flip()
 		continue
-
-4. converter para POO:
-	classe dos objetos inimigos
-'''
