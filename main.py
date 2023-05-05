@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+
 pygame.init()
 x = 1280
 y = 720
@@ -9,17 +10,17 @@ tempo_restante = 40
 start_time = time.time()
 screen = pygame.display.set_mode((x, y))
 pygame.display.set_caption("Monitores vs Dikastis")
-#background
+# background
 bg = pygame.image.load("fotos/bg2.jpg").convert_alpha()
 bg = pygame.transform.scale(bg, (x, y))
 
-#monitor
+# monitor
 monitor = pygame.image.load("fotos/Monitor_Cin.png").convert_alpha()
 monitor = pygame.transform.scale(monitor, (80, 80))
 pos_monitor_x = 100
 pos_monitor_y = 300
 
-#inimigos ( erro, chatgpt, cola, aluno chato com duvida com duvida no discord)
+# inimigos ( erro, chatgpt, cola, aluno chato com duvida com duvida no discord)
 erro = pygame.image.load("fotos/erro.png").convert_alpha()
 erro = pygame.transform.scale(erro, (70, 70))
 pos_erro_x = 500
@@ -30,9 +31,14 @@ chatgpt = pygame.transform.scale(chatgpt, (70, 70))
 pos_chatgpt_x = 500
 pos_chatgpt_y = 300
 
+runtimeerror = pygame.image.load("fotos/runtimeerror.png").convert_alpha()
+runtimeerror = pygame.transform.scale(runtimeerror, (70, 70))
+pos_runtimeerror_x = 500
+pos_runtimeerror_y = 360
+
 # municao do acerto
 municao = pygame.image.load("fotos/acerto.png").convert_alpha()
-municao = pygame.transform.scale(municao, (35, 35 ))
+municao = pygame.transform.scale(municao, (35, 35))
 pos_x_municao = 110
 pos_y_municao = 300
 vel_x_municao = 0
@@ -41,13 +47,12 @@ pontos = 2
 
 triggered = False
 
-#definido os rects
+# definido os rects
 monitor_rect = monitor.get_rect()
 erro_rect = erro.get_rect()
 chatgpt_rect = chatgpt.get_rect()
+runtimeerror_rect = runtimeerror.get_rect()
 municao_rect = municao.get_rect()
-
-
 
 rodando = True
 
@@ -63,6 +68,8 @@ def colisoes_erro():
         return True
     else:
         return False
+
+
 def colisoes_gpt():
     global pontos
     if monitor_rect.colliderect(chatgpt_rect) or chatgpt_rect.x == 60:
@@ -74,11 +81,25 @@ def colisoes_gpt():
     else:
         return False
 
+
+def colisoes_runtimeerror():
+    global pontos
+    if monitor_rect.colliderect(runtimeerror_rect) or runtimeerror_rect.x == 60:
+        pontos -= 1
+        return True
+    elif municao_rect.colliderect(runtimeerror_rect):
+        pontos += 1
+        return True
+    else:
+        return False
+
+
 # respawnar os inimigos
 def respawnar():
     x = 1350
-    y = random.randint(80,560)
-    return [x,y]
+    y = random.randint(80, 560)
+    return [x, y]
+
 
 def respawnar_municao():
     triggered = False
@@ -86,6 +107,8 @@ def respawnar_municao():
     respawnar_municao_y = pos_monitor_y
     vel_x_municao = 0
     return [respawnar_municao_x, respawnar_municao_y, triggered, vel_x_municao]
+
+
 game_over = False
 while rodando:
     for event in pygame.event.get():
@@ -99,7 +122,7 @@ while rodando:
     if rel_x < 1280:
         screen.blit(bg, (rel_x, 0))
 
-    #movimentacao do monitor
+    # movimentacao do monitor
     tecla = pygame.key.get_pressed()
     if tecla[pygame.K_UP] and pos_monitor_y > 1:
         pos_monitor_y -= 5
@@ -114,17 +137,19 @@ while rodando:
         triggered = True
         vel_x_municao = 5
 
-    #movimento
+    # movimento
     x -= 0.8
     pos_erro_x -= 1.2
     pos_chatgpt_x -= 1.0
+    pos_runtimeerror_x -= 1.4
     pos_x_municao += vel_x_municao
-    screen.blit(monitor,(pos_monitor_x, pos_monitor_y))
+    screen.blit(monitor, (pos_monitor_x, pos_monitor_y))
     screen.blit(erro, (pos_erro_x, pos_erro_y))
     screen.blit(chatgpt, (pos_chatgpt_x, pos_chatgpt_y))
+    screen.blit(runtimeerror, (pos_runtimeerror_x, pos_runtimeerror_y))
     screen.blit(municao, (pos_x_municao, pos_y_municao))
 
-    #respawnar
+    # respawnar
     if pos_erro_x == 50:
         pos_erro_x = respawnar()[0]
         pos_erro_y = respawnar()[1]
@@ -144,6 +169,15 @@ while rodando:
     if colisoes_gpt():
         pos_chatgpt_x = respawnar()[0]
         pos_chatgpt_y = respawnar()[1]
+        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
+
+    if pos_runtimeerror_x == 50:
+        pos_runtimeerror_x = respawnar()[0]
+        pos_runtimeerror_y = respawnar()[1]
+
+    if colisoes_runtimeerror():
+        pos_runtimeerror_x = respawnar()[0]
+        pos_runtimeerror_y = respawnar()[1]
         pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
 
     # criando as fontes de pontuação
@@ -167,28 +201,26 @@ while rodando:
 
     fonte = pygame.font.Font("fonte/Arcades.ttf", 40)
     placar = fonte.render(f"{pontos}", False, (0, 0, 0))
-    screen.blit(placar, (80,50))
+    screen.blit(placar, (80, 50))
 
     tempo_restante = 40 - int(time.time() - start_time)
     fonte_tempo = pygame.font.Font("fonte/Arcades.ttf", 40)
     texto_tempo = fonte_tempo.render(f"{tempo_restante}s", False, (0, 0, 0))
     screen.blit(texto_tempo, (80, 100))
 
-
-
-
-
-    #criar as imagens do jogo
+    # criar as imagens do jogo
     screen.blit(erro, (pos_erro_x, pos_erro_y))
     screen.blit(municao, (pos_x_municao, pos_y_municao))
     screen.blit(chatgpt, (pos_chatgpt_x, pos_chatgpt_y))
+    screen.blit(runtimeerror, (pos_runtimeerror_x, pos_runtimeerror_y))
     screen.blit(monitor, (pos_monitor_x, pos_monitor_y))
 
     # criar o desenho
-   # pygame.draw.rect(screen, (255, 0, 0), erro_rect, 4)
-    #pygame.draw.rect(screen, (255, 0, 0), municao_rect, 4)
-    #pygame.draw.rect(screen, (255, 0, 0), chatgpt_rect, 4)
-    #pygame.draw.rect(screen, (255, 0, 0), monitor_rect, 4)
+    # pygame.draw.rect(screen, (255, 0, 0), erro_rect, 4)
+    # pygame.draw.rect(screen, (255, 0, 0), municao_rect, 4)
+    # pygame.draw.rect(screen, (255, 0, 0), chatgpt_rect, 4)
+    # pygame.draw.rect(screen, (255, 0, 0), runtimeerror_rect, 4)
+    # pygame.draw.rect(screen, (255, 0, 0), monitor_rect, 4)
 
     monitor_rect.y = pos_monitor_y
     monitor_rect.x = pos_monitor_x
@@ -199,6 +231,9 @@ while rodando:
     chatgpt_rect.y = pos_chatgpt_y
     chatgpt_rect.x = pos_chatgpt_x
 
+    runtimeerror_rect.y = pos_runtimeerror_y
+    runtimeerror_rect.x = pos_runtimeerror_x
+
     municao_rect.y = pos_y_municao
     municao_rect.x = pos_x_municao
 
@@ -208,66 +243,11 @@ while rodando:
         rodando = False
         game_over = True
 
-
-
     # Se o tempo decorrido for maior ou igual ao tempo de jogo, encerre o jogo
 
     # Fecha o jogo
-
 
     pygame.display.update()
 
 if game_over == True:
     print("Game Over")
-
-'''
-comentários:
-
-1. POO
-	class Inimigos:
-    
-    def erro (self):
-        erro = pygame.image.load("fotos/erro.png").convert_alpha()
-        erro = monitor = pygame.transform.scale(monitor, (80, 80))
-        pos_monitor_x = 100
-        pos_monitor_y = 300
-
-    def runtime (self):
-        
-
-    def chatgpt (self):
-        chatgpt = pygame.image.load("fotos/gpt.png").convert_alpha()
-        chatgpt = pygame.transform.scale(chatgpt, (70, 70))
-        pos_chatgpt_x = 500
-        pos_chatgpt_y = 300
-
-
-2. criando Pause (tecla P)
-
-(na linha 116)
-if tecla [pygame.K_p]:
-	if rodando:
-		rodando = False
-	else:
-		rodando = True
-	mensagem = "JOGO PAUSADO"
-	texto = fonte.render(mensagem,True,(255,255,255))
-	caixa_texto = texto.get_rect()
-	pausado = True
-	while pausado:
-		caixa_texto.center = (x//2, y//2)
-		screen.blit (texto, caixa_texto)
-		if event.type == QUIT:
-			pygame.quit()
-			exit()
-		if tecla [pygame.K_p]:
-			rodando = True
-		
-            pygame.display.update()
-				
-(...não sei se é necessário, mas...)
-(antes da linha 207)
-	if rodando == False:
-		pygame.display.flip()
-		continue
-'''
