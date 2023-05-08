@@ -1,7 +1,11 @@
 #importa os itens necessários para o jogo rodar
 import pygame
-import random
 import time
+from functions import colisoes_erro
+from functions import colisoes_gpt
+from functions import colisoes_runtimeerror
+from functions import respawnar
+from functions import respawnar_municao
 
 # Criando janela
 pygame.init()
@@ -60,59 +64,6 @@ municao_rect = municao.get_rect()
 
 rodando = True
 
-
-# definindo as colisoes
-def colisoes_erro():
-    global pontos
-    if monitor_rect.colliderect(erro_rect) or erro_rect.x == 60:
-        pontos -= 1
-        return True
-    elif municao_rect.colliderect(erro_rect):
-        pontos += 1
-        return True
-    else:
-        return False
-
-
-def colisoes_gpt():
-    global pontos
-    if monitor_rect.colliderect(chatgpt_rect) or chatgpt_rect.x == 60:
-        pontos -= 5
-        return True
-    elif municao_rect.colliderect(chatgpt_rect):
-        pontos += 5
-        return True
-    else:
-        return False
-
-
-def colisoes_runtimeerror():
-    global pontos
-    if monitor_rect.colliderect(runtimeerror_rect) or runtimeerror_rect.x == 60:
-        pontos -= 10
-        return True
-    elif municao_rect.colliderect(runtimeerror_rect):
-        pontos += 10
-        return True
-    else:
-        return False
-
-
-# respawnar os inimigos
-def respawnar():
-    x = 1350
-    y = random.randint(80, 560)
-    return [x, y]
-
-
-def respawnar_municao():
-    triggered = False
-    respawnar_municao_x = pos_monitor_x
-    respawnar_municao_y = pos_monitor_y
-    vel_x_municao = 0
-    return [respawnar_municao_x, respawnar_municao_y, triggered, vel_x_municao]
-
-
 game_over = False
 while rodando:
     for event in pygame.event.get():
@@ -158,31 +109,46 @@ while rodando:
         pos_erro_x = respawnar()[0]
         pos_erro_y = respawnar()[1]
 
-    if colisoes_erro():
+    if colisoes_erro(monitor_rect, erro_rect, municao_rect) == 2:
+        pontos += 1
         pos_erro_x = respawnar()[0]
         pos_erro_y = respawnar()[1]
-        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
+        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao(pos_monitor_x, pos_monitor_y)
+    if colisoes_erro(monitor_rect, erro_rect, municao_rect) == 1:
+        pontos -= 1
+        pos_erro_x = respawnar()[0]
+        pos_erro_y = respawnar()[1]
 
     if pos_x_municao == 1300:
-        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
+        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao(pos_monitor_x, pos_monitor_y)
 
     if pos_chatgpt_x == 50:
         pos_chatgpt_x = respawnar()[0]
         pos_chatgpt_y = respawnar()[1]
 
-    if colisoes_gpt():
+    if colisoes_gpt(monitor_rect, chatgpt_rect, municao_rect) == 2:
+        pontos += 5
         pos_chatgpt_x = respawnar()[0]
         pos_chatgpt_y = respawnar()[1]
-        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
+        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao(pos_monitor_x, pos_monitor_y)
+    if colisoes_gpt(monitor_rect, chatgpt_rect, municao_rect) == 1:
+        pontos -= 5
+        pos_chatgpt_x = respawnar()[0]
+        pos_chatgpt_y = respawnar()[1]
 
     if pos_runtimeerror_x == 50:
         pos_runtimeerror_x = respawnar()[0]
         pos_runtimeerror_y = respawnar()[1]
 
-    if colisoes_runtimeerror():
+    if colisoes_runtimeerror(monitor_rect, runtimeerror_rect, municao_rect) == 2:
+        pontos += 10
         pos_runtimeerror_x = respawnar()[0]
         pos_runtimeerror_y = respawnar()[1]
-        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao()
+        pos_x_municao, pos_y_municao, triggered, vel_x_municao = respawnar_municao(pos_monitor_x, pos_monitor_y)
+    if colisoes_runtimeerror(monitor_rect, runtimeerror_rect, municao_rect) == 1:
+        pontos -= 10
+        pos_runtimeerror_x = respawnar()[0]
+        pos_runtimeerror_y = respawnar()[1]
 
     # criando as fontes de pontuação
     estrela = pygame.image.load("fotos/estrela.png").convert_alpha()
@@ -252,4 +218,3 @@ while rodando:
     # Fecha o jogo
 
     pygame.display.update()
-
