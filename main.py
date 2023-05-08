@@ -1,6 +1,8 @@
+#importa os itens necessários para o jogo rodar
 import pygame
 import random
 import time
+
 
 pygame.init()
 x = 1280
@@ -43,7 +45,7 @@ pos_x_municao = 110
 pos_y_municao = 300
 vel_x_municao = 0
 
-pontos = 2
+pontos = 16
 
 triggered = False
 
@@ -73,10 +75,10 @@ def colisoes_erro():
 def colisoes_gpt():
     global pontos
     if monitor_rect.colliderect(chatgpt_rect) or chatgpt_rect.x == 60:
-        pontos -= 1
+        pontos -= 5
         return True
     elif municao_rect.colliderect(chatgpt_rect):
-        pontos += 1
+        pontos += 5
         return True
     else:
         return False
@@ -85,10 +87,10 @@ def colisoes_gpt():
 def colisoes_runtimeerror():
     global pontos
     if monitor_rect.colliderect(runtimeerror_rect) or runtimeerror_rect.x == 60:
-        pontos -= 1
+        pontos -= 10
         return True
     elif municao_rect.colliderect(runtimeerror_rect):
-        pontos += 1
+        pontos += 10
         return True
     else:
         return False
@@ -139,9 +141,9 @@ while rodando:
 
     # movimento
     x -= 0.8
-    pos_erro_x -= 1.2
-    pos_chatgpt_x -= 1.0
-    pos_runtimeerror_x -= 1.4
+    pos_erro_x -= 1.5
+    pos_chatgpt_x -= 2.0
+    pos_runtimeerror_x -= 2.5
     pos_x_municao += vel_x_municao
     screen.blit(monitor, (pos_monitor_x, pos_monitor_y))
     screen.blit(erro, (pos_erro_x, pos_erro_y))
@@ -249,5 +251,3 @@ while rodando:
 
     pygame.display.update()
 
-if game_over == True:
-    print("Game Over")
