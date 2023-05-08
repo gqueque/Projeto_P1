@@ -1,3 +1,4 @@
+
 #importa os itens necessários para o jogo rodar
 import pygame
 import time
