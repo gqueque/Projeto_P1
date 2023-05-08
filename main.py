@@ -3,11 +3,12 @@ import pygame
 import random
 import time
 
-
+# Criando janela
 pygame.init()
 x = 1280
 y = 720
 
+# Startando tempo
 tempo_restante = 40
 start_time = time.time()
 screen = pygame.display.set_mode((x, y))
@@ -22,7 +23,7 @@ monitor = pygame.transform.scale(monitor, (80, 80))
 pos_monitor_x = 100
 pos_monitor_y = 300
 
-# inimigos ( erro, chatgpt, cola, aluno chato com duvida com duvida no discord)
+# inimigos ( erro, chatgpt, e runtime)
 erro = pygame.image.load("fotos/erro.png").convert_alpha()
 erro = pygame.transform.scale(erro, (70, 70))
 pos_erro_x = 500
@@ -45,6 +46,7 @@ pos_x_municao = 110
 pos_y_municao = 300
 vel_x_municao = 0
 
+# pontuação, startando como 16 por causa de um bug que não conseguimos solucionar
 pontos = 16
 
 triggered = False
