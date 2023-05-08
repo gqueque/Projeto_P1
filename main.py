@@ -11,7 +11,7 @@ y = 720
 tempo_restante = 40
 start_time = time.time()
 screen = pygame.display.set_mode((x, y))
-pygame.display.set_caption("Monitores vs Dikastis")
+pygame.display.set_caption("Vida de Monitor")
 # background
 bg = pygame.image.load("fotos/bg2.jpg").convert_alpha()
 bg = pygame.transform.scale(bg, (x, y))
